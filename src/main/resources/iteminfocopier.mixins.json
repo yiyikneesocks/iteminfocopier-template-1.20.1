@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.iteminfocopier.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"HandledScreenAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

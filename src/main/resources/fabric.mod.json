@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "iteminfocopier",
+  "version": "1.0.0",
+  "name": "ItemInfoCopier",
+  "description": "Copy item ID with Ctrl+C",
+  "authors": ["Azulores"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/iteminfocopier/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.example.iteminfocopier.ItemInfoCopierClient"
+    ]
+  },
+  "mixins": [
+    "iteminfocopier.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
