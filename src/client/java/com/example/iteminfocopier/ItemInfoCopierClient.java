@@ -1,9 +1,8 @@
 package com.example.iteminfocopier;
 
 import org.lwjgl.glfw.GLFW;
-
+import com.example.iteminfocopier.config.IICConfig;
 import com.example.iteminfocopier.mixin.client.HandledScreenAccessor;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -23,6 +22,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class ItemInfoCopierClient implements ClientModInitializer {
+    // 加载配置实例
+    public static final IICConfig CONFIG = IICConfig.load();
     private boolean wasPressed = false;
 
     @Override
@@ -36,7 +37,7 @@ public class ItemInfoCopierClient implements ClientModInitializer {
 
             if (isCtrlDown && isCPressed) {
                 if (!wasPressed) {
-                    // 如果当前没有打开聊天栏或其他输入框，则触发逻辑
+                    // 仅在没有打开聊天框等输入框时触发
                     if (client.currentScreen == null || client.currentScreen instanceof HandledScreen) {
                         handleCopyLogic(client);
                     }
@@ -53,15 +54,22 @@ public class ItemInfoCopierClient implements ClientModInitializer {
         if (player == null) return;
 
         ItemStack stack = ItemStack.EMPTY;
+        boolean isFromInventory = false;
 
-        // 1. 获取物品 (容器悬停或主手)
+        // 1. 获取物品并检查配置开关
         if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
-            // 使用我们之前创建的 Mixin Accessor
+            // 如果物品栏复制被禁用，直接返回
+            if (!CONFIG.enableInventoryCopy) return;
+            
             Slot slot = ((HandledScreenAccessor) handledScreen).getFocusedSlot();
             if (slot != null && slot.hasStack()) {
                 stack = slot.getStack();
             }
+            isFromInventory = true;
         } else if (client.currentScreen == null) {
+            // 如果手持复制被禁用，直接返回
+            if (!CONFIG.enableHandCopy) return;
+            
             stack = player.getMainHandStack();
         }
 
@@ -69,7 +77,7 @@ public class ItemInfoCopierClient implements ClientModInitializer {
 
         // 2. 语言适配检测
         String lang = client.getLanguageManager().getLanguage();
-        boolean isZh = lang != null && (lang.equals("zh_cn") || lang.equals("zh_tw"));
+        boolean isZh = lang != null && lang.startsWith("zh");
 
         // 3. 准备数据
         String registryId = Registries.ITEM.getId(stack.getItem()).toString();
@@ -85,15 +93,15 @@ public class ItemInfoCopierClient implements ClientModInitializer {
 
         // 4. 执行默认操作：复制 ID 并播放声音
         client.keyboard.setClipboard(registryId);
-        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.2f));
 
         // 5. 构建并发送聊天框消息
         player.sendMessage(Text.literal("\n" + getI18n(isZh, "§b[物品信息复制] ", "§b[Item Info Copy] ") + "§f" + displayName), false);
 
-        // 复制行：显示名称
+        // 复制行：名称
         player.sendMessage(createCopyableLine(getI18n(isZh, "名称", "Name"), displayName, isZh), false);
         
-        // 复制行：英文/翻译键 (如果不是英文环境则显示)
+        // 复制行：翻译键 (修复空指针：常量在前)
         if (isZh || !"en_us".equals(lang)) {
             player.sendMessage(createCopyableLine(getI18n(isZh, "翻译键", "Translation Key"), translationKey, isZh), false);
         }
@@ -101,7 +109,7 @@ public class ItemInfoCopierClient implements ClientModInitializer {
         // 复制行：命名空间 ID
         player.sendMessage(createCopyableLine(getI18n(isZh, "命名空间 ID", "Namespace ID"), registryId, isZh), false);
 
-        // 复制行：数字 ID (Raw ID)
+        // 复制行：数字 ID
         player.sendMessage(createCopyableLine(getI18n(isZh, "数字 ID", "Numeric ID"), String.valueOf(rawId), isZh), false);
 
         // 复制行：NBT
@@ -109,11 +117,11 @@ public class ItemInfoCopierClient implements ClientModInitializer {
             player.sendMessage(createCopyableLine("NBT", nbtString, isZh), false);
         }
 
-        // 一键复制所有信息的按钮
+        // 一键复制按钮
         MutableText copyAllBtn = Text.literal(getI18n(isZh, "§6 >>> [点击复制全部信息] <<<", "§6 >>> [Click to Copy All] <<<"))
             .styled(style -> style
                 .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, allInfo))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(getI18n(isZh, "汇总所有属性并复制", "Copy all fields summary"))))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(getI18n(isZh, "汇总并复制", "Copy summary"))))
                 .withUnderline(true));
         
         player.sendMessage(copyAllBtn.append(Text.literal("\n")), false);
@@ -122,8 +130,6 @@ public class ItemInfoCopierClient implements ClientModInitializer {
     private MutableText createCopyableLine(String label, String value, boolean isZh) {
         String copyLabel = isZh ? "[复制]" : "[Copy]";
         String hoverHint = isZh ? "点击复制内容" : "Click to copy";
-        
-        // 缩略显示防止刷屏，但复制的内容是完整的
         String displayValue = value.length() > 50 ? value.substring(0, 47) + "..." : value;
 
         return Text.literal("§f " + label + ": §e" + displayValue + " ")

@@ -16,6 +16,10 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	maven { url 'https://maven.aliyun.com/repository/public' }
+	maven { url 'https://maven.aliyun.com/repository/google' }
+	maven { url 'https://maven.shedaniel.me/' }      // Cloth Config 的仓库
+	maven { url 'https://maven.terraformersmc.com/' } // ModMenu 的仓库
 }
 
 loom {
@@ -38,7 +42,11 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	
+	// Cloth Config API
+	modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.106")
+    include("me.shedaniel.cloth:cloth-config-fabric:11.1.106")
+    // ModMenu 
+    modImplementation("com.terraformersmc:modmenu:7.2.2")
 }
 
 processResources {

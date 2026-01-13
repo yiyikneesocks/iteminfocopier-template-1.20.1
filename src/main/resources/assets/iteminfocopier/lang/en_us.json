@@ -1,0 +1,6 @@
+{
+  "title.iteminfocopier.config": "ItemInfoCopier Config",
+  "category.iteminfocopier.general": "General",
+  "option.iteminfocopier.enableHand": "Enable Hand Copy",
+  "option.iteminfocopier.enableInv": "Enable Inventory Copy"
+}

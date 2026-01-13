@@ -1,0 +1,6 @@
+{
+  "title.iteminfocopier.config": "物品信息复制 设置",
+  "category.iteminfocopier.general": "常规设置",
+  "option.iteminfocopier.enableHand": "启用手持物品复制",
+  "option.iteminfocopier.enableInv": "启用物品栏悬停复制"
+}
