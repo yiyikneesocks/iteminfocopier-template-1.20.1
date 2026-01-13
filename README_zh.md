@@ -18,5 +18,18 @@ Item Info Copier 是一个轻量级 Fabric 模组，支持 Minecraft 1.20.1 - 1.
 2. 将 `.jar` 文件放入 `mods` 文件夹。
 3. 需要安装 [Cloth Config](https://modrinth.com/mod/cloth-config) 和 [ModMenu](https://modrinth.com/mod/modmenu)。
 
+---
+
+
+## ☕ 支持我
+
+如果这个Mod对你有帮助，欢迎在爱发电支持我。
+
+[![Afdian](https://img.shields.io/badge/赞助-爱发电-946CEE?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://afdian.com/a/azulorescr0clog)
+
+> *感谢每一位支持者！*
+
+
+
 ### 📜 开源协议
 本项目采用 [MIT License](./LICENSE) 开源协议。
