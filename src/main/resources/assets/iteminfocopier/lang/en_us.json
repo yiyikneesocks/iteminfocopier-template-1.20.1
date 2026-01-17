@@ -2,5 +2,10 @@
   "title.iteminfocopier.config": "ItemInfoCopier Config",
   "category.iteminfocopier.general": "General",
   "option.iteminfocopier.enableHand": "Enable Hand Copy",
-  "option.iteminfocopier.enableInv": "Enable Inventory Copy"
+  "option.iteminfocopier.enableInv": "Enable Inventory Copy",
+  "option.iteminfocopier.copyItemName": "Copy Item Name",
+  "option.iteminfocopier.copyItemId": "Copy Namespace ID",
+  "option.iteminfocopier.copyTranslationKey": "Copy Translation Key",
+  "option.iteminfocopier.copyNumericId": "Copy Numeric ID",
+  "option.iteminfocopier.copyNbt": "Copy NBT"
 }

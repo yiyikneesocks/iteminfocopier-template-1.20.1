@@ -2,5 +2,10 @@
   "title.iteminfocopier.config": "物品信息复制 设置",
   "category.iteminfocopier.general": "常规设置",
   "option.iteminfocopier.enableHand": "启用手持物品复制",
-  "option.iteminfocopier.enableInv": "启用物品栏悬停复制"
+  "option.iteminfocopier.enableInv": "启用物品栏悬停复制",
+  "option.iteminfocopier.copyItemName": "复制物品名称",
+  "option.iteminfocopier.copyItemId": "复制命名空间ID",
+  "option.iteminfocopier.copyTranslationKey": "复制翻译键",
+  "option.iteminfocopier.copyNumericId": "复制数字ID",
+  "option.iteminfocopier.copyNbt": "复制NBT"
 }

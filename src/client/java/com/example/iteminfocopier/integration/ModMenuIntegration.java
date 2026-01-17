@@ -29,6 +29,31 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.enableInventoryCopy = newValue)
                     .build());
 
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("option.iteminfocopier.copyItemName"), ItemInfoCopierClient.CONFIG.copyItemName)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.copyItemName = newValue)
+                    .build());
+
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("option.iteminfocopier.copyItemId"), ItemInfoCopierClient.CONFIG.copyItemId)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.copyItemId = newValue)
+                    .build());
+
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("option.iteminfocopier.copyTranslationKey"), ItemInfoCopierClient.CONFIG.copyTranslationKey)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.copyTranslationKey = newValue)
+                    .build());
+
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("option.iteminfocopier.copyNumericId"), ItemInfoCopierClient.CONFIG.copyNumericId)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.copyNumericId = newValue)
+                    .build());
+            
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("option.iteminfocopier.copyNbt"), ItemInfoCopierClient.CONFIG.copyNbt)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> ItemInfoCopierClient.CONFIG.copyNbt = newValue)
+                    .build());
+
             builder.setSavingRunnable(() -> ItemInfoCopierClient.CONFIG.save());
             return builder.build();
         };

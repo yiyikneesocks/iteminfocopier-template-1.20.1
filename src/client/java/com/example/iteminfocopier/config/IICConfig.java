@@ -20,6 +20,13 @@ public class IICConfig {
     public boolean enableHandCopy = true;
     public boolean enableInventoryCopy = true;
 
+    // Add new options
+    public boolean copyItemName = true;
+    public boolean copyItemId = true;
+    public boolean copyTranslationKey = true;
+    public boolean copyNumericId = true;
+    public boolean copyNbt = true;
+
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("iteminfocopier.json").toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

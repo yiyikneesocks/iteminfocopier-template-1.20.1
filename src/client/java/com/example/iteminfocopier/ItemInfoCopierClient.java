@@ -88,8 +88,7 @@ public class ItemInfoCopierClient implements ClientModInitializer {
         String nbtString = (nbt != null) ? nbt.toString() : "{}";
 
         // 汇总信息用于一键复制
-        String allInfo = String.format("Name: %s\nID: %s\nKey: %s\nRawID: %d\nNBT: %s", 
-                                        displayName, registryId, translationKey, rawId, nbtString);
+        StringBuilder allInfoBuilder = new StringBuilder();
 
         // 4. 执行默认操作：复制 ID 并播放声音
         client.keyboard.setClipboard(registryId);
@@ -98,24 +97,35 @@ public class ItemInfoCopierClient implements ClientModInitializer {
         // 5. 构建并发送聊天框消息
         player.sendMessage(Text.literal("\n" + getI18n(isZh, "§b[物品信息复制] ", "§b[Item Info Copy] ") + "§f" + displayName), false);
 
-        // 复制行：名称
-        player.sendMessage(createCopyableLine(getI18n(isZh, "名称", "Name"), displayName, isZh), false);
+        if (CONFIG.copyItemName) {
+            player.sendMessage(createCopyableLine(getI18n(isZh, "名称", "Name"), displayName, isZh), false);
+            allInfoBuilder.append("Name: ").append(displayName).append("\n");
+        }
         
-        // 复制行：翻译键 (修复空指针：常量在前)
-        if (isZh || !"en_us".equals(lang)) {
-            player.sendMessage(createCopyableLine(getI18n(isZh, "翻译键", "Translation Key"), translationKey, isZh), false);
+        if (CONFIG.copyTranslationKey) {
+            // 复制行：翻译键 (修复空指针：常量在前)
+            if (isZh || !"en_us".equals(lang)) {
+                player.sendMessage(createCopyableLine(getI18n(isZh, "翻译键", "Translation Key"), translationKey, isZh), false);
+            }
+            allInfoBuilder.append("Key: ").append(translationKey).append("\n");
         }
 
-        // 复制行：命名空间 ID
-        player.sendMessage(createCopyableLine(getI18n(isZh, "命名空间 ID", "Namespace ID"), registryId, isZh), false);
+        if (CONFIG.copyItemId) {
+            player.sendMessage(createCopyableLine(getI18n(isZh, "命名空间 ID", "Namespace ID"), registryId, isZh), false);
+            allInfoBuilder.append("ID: ").append(registryId).append("\n");
+        }
 
-        // 复制行：数字 ID
-        player.sendMessage(createCopyableLine(getI18n(isZh, "数字 ID", "Numeric ID"), String.valueOf(rawId), isZh), false);
+        if (CONFIG.copyNumericId) {
+            player.sendMessage(createCopyableLine(getI18n(isZh, "数字 ID", "Numeric ID"), String.valueOf(rawId), isZh), false);
+            allInfoBuilder.append("RawID: ").append(rawId).append("\n");
+        }
 
-        // 复制行：NBT
-        if (nbt != null) {
+        if (CONFIG.copyNbt && nbt != null) {
             player.sendMessage(createCopyableLine("NBT", nbtString, isZh), false);
+            allInfoBuilder.append("NBT: ").append(nbtString);
         }
+
+        String allInfo = allInfoBuilder.toString();
 
         // 一键复制按钮
         MutableText copyAllBtn = Text.literal(getI18n(isZh, "§6 >>> [点击复制全部信息] <<<", "§6 >>> [Click to Copy All] <<<"))
