@@ -1,0 +1,52 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v1.0.0, v1.0.1, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write   # GitHub Release 步骤需要
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -Pmod_version=${GITHUB_REF_NAME#v}
+
+      - name: Publish mod to all platforms
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          # GitHub
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-tag: ${{ github.ref_name }}
+          github-generate-changelog: true
+          github-draft: false
+          github-prerelease: false
+          github-commitish: main   # 发布基于 main 分支
+          
+          # Modrinth
+          modrinth-id: ${{ secrets.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+
+          # CurseForge
+          curseforge-id: ${{ secrets.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          # 上传的文件
+          files: |
+            build/libs/!(*-@(dev|sources|javadoc)).jar

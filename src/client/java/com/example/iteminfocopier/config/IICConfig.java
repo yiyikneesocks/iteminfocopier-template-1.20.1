@@ -26,6 +26,7 @@ public class IICConfig {
     public boolean copyTranslationKey = true;
     public boolean copyNumericId = true;
     public boolean copyNbt = true;
+    public String copyHotkey = "";
 
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("iteminfocopier.json").toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

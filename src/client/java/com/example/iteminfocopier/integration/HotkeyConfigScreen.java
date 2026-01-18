@@ -75,11 +75,9 @@ public final class HotkeyConfigScreen {
         private final TextWidget hotkeyText;
         private final ButtonWidget recordButton;
         private final ButtonWidget clearButton;
-        private final Screen parentScreen;
 
         protected HotkeyEntry(Screen parent) {
-            super(Text.translatable("text.iteminfocopier.hotkey_entry_title"), null);
-            this.parentScreen = parent;
+            super(Text.translatable("text.iteminfocopier.hotkey_entry_title"), () -> Optional.empty());
 
             hotkeyText = new TextWidget(0, 0, 200, 20, getHotkeyText(), MinecraftClient.getInstance().textRenderer);
 
