@@ -39,12 +39,12 @@ jobs:
           github-commitish: main   # 发布基于 main 分支
           
           # Modrinth
-          modrinth-id: ${{ secrets.MODRINTH_ID }}
+          modrinth-id: "item-info-copier"
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
 
           # CurseForge
-          curseforge-id: ${{ secrets.CURSEFORGE_ID }}
+          curseforge-id: "1435524"
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           # 上传的文件
