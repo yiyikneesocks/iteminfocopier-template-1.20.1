@@ -7,5 +7,19 @@
   "option.iteminfocopier.copyItemId": "Copy Namespace ID",
   "option.iteminfocopier.copyTranslationKey": "Copy Translation Key",
   "option.iteminfocopier.copyNumericId": "Copy Numeric ID",
-  "option.iteminfocopier.copyNbt": "Copy NBT"
+  "option.iteminfocopier.copyNbt": "Copy NBT",
+  "text.iteminfocopier.hotkey_entry_title": "Copy Hotkey",
+  "text.iteminfocopier.hotkey_display": "Current Hotkey: %s",
+  "text.iteminfocopier.hotkey_none": "None",
+  "button.iteminfocopier.record": "Record",
+  "button.iteminfocopier.clear": "Clear",
+  "button.iteminfocopier.confirm": "Confirm",
+  "button.iteminfocopier.cancel": "Cancel",
+  "screen.iteminfocopier.record_keybind": "Record Keybind",
+  "text.iteminfocopier.press_any_key": "Press any key combination",
+  "text.iteminfocopier.key_modifiers_hint": "(Ctrl, Alt, Shift + Key)",
+  "text.iteminfocopier.recorded_key_display": "Recorded: %s",
+  "text.iteminfocopier.modifier.ctrl": "Ctrl + ",
+  "text.iteminfocopier.modifier.alt": "Alt + ",
+  "text.iteminfocopier.modifier.shift": "Shift + "
 }

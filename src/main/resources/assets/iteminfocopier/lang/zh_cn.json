@@ -7,5 +7,19 @@
   "option.iteminfocopier.copyItemId": "复制命名空间ID",
   "option.iteminfocopier.copyTranslationKey": "复制翻译键",
   "option.iteminfocopier.copyNumericId": "复制数字ID",
-  "option.iteminfocopier.copyNbt": "复制NBT"
+  "option.iteminfocopier.copyNbt": "复制NBT",
+  "text.iteminfocopier.hotkey_entry_title": "复制热键",
+  "text.iteminfocopier.hotkey_display": "当前热键: %s",
+  "text.iteminfocopier.hotkey_none": "未设置",
+  "button.iteminfocopier.record": "录制",
+  "button.iteminfocopier.clear": "清除",
+  "button.iteminfocopier.confirm": "确认",
+  "button.iteminfocopier.cancel": "取消",
+  "screen.iteminfocopier.record_keybind": "录制按键",
+  "text.iteminfocopier.press_any_key": "请按下任意按键组合",
+  "text.iteminfocopier.key_modifiers_hint": "(可包含 Ctrl, Alt, Shift)",
+  "text.iteminfocopier.recorded_key_display": "已录制: %s",
+  "text.iteminfocopier.modifier.ctrl": "Ctrl + ",
+  "text.iteminfocopier.modifier.alt": "Alt + ",
+  "text.iteminfocopier.modifier.shift": "Shift + "
 }

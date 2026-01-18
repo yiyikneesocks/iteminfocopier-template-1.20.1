@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "iteminfocopier",
-  "version": "1.0.1",
+  "version": "${version}",
   "name": "ItemInfoCopier",
   "description": "Copy item info with Ctrl+C",
   "authors": ["Azulores"],
