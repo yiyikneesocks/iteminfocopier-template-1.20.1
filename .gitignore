@@ -39,3 +39,6 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+# git guide (local documentation)
+GIT_GUIDE.md
