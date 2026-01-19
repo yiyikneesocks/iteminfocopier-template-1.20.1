@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*' # Trigger on tags like v1.0.0, v1.0.1, etc.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v1.0.6)'
+        required: true
+        default: 'v1.0.6'
 
 jobs:
   build-and-release:
@@ -14,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -27,29 +35,118 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -Pmod_version=${GITHUB_REF_NAME#v}
 
-      - name: Publish mod to all platforms
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          # GitHub
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-tag: ${{ github.ref_name }}
-          github-generate-changelog: false
-          github-changelog-file: CHANGELOG.md  # 使用自定义文件
-          github-draft: false
-          github-prerelease: false
-          github-commitish: main   # 发布基于 main 分支
+      - name: Smart Multi-Platform Publish
+        run: |
+          # 初始化平台状态
+          github_success=false
+          modrinth_success=false
+          curseforge_success=false
           
-          # Modrinth
-          modrinth-id: "item-info-copier"
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          modrinth-featured: true
-          modrinth-changelog-file: CHANGELOG.md  # 添加这个：从文件读取 changelog
-    
-          # CurseForge
-          curseforge-id: "1435524"
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          curseforge-changelog-file: CHANGELOG.md  # 添加这个：从文件读取 changelog
-
-          # 上传的文件
-          files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
+          # 失败计数器（每个平台独立）
+          github_failures=0
+          modrinth_failures=0
+          curseforge_failures=0
+          
+          # 最大循环次数
+          max_cycles=5
+          cycle=1
+          
+          echo "🚀 Starting smart multi-platform publish (max $max_cycles cycles)"
+          
+          while [ $cycle -le $max_cycles ]; do
+            echo "🔄 Cycle $cycle / $max_cycles"
+            
+            all_success=true
+            
+            # GitHub 发布
+            if [ "$github_success" = false ]; then
+              echo "📤 Attempting GitHub publish..."
+              if gh release create ${{ github.ref_name }} \
+                --title "${{ github.ref_name }}" \
+                --notes-file CHANGELOG.md \
+                --draft=false \
+                --prerelease=false \
+                build/libs/!(*-@(dev|sources|javadoc)).jar; then
+                echo "✅ GitHub publish successful"
+                github_success=true
+                github_failures=0
+              else
+                echo "❌ GitHub publish failed"
+                github_failures=$((github_failures + 1))
+                all_success=false
+                if [ $github_failures -ge 2 ]; then
+                  delay=$((2 ** (github_failures - 1) * 10))
+                  echo "⏳ GitHub consecutive failures: $github_failures, waiting ${delay}s..."
+                  sleep $delay
+                fi
+              fi
+            else
+              echo "✅ GitHub already successful, skipping"
+            fi
+            
+            # Modrinth 发布
+            if [ "$modrinth_success" = false ]; then
+              echo "📤 Attempting Modrinth publish..."
+              if ./gradlew modrinth \
+                --stacktrace \
+                -Pmodrinth.token=${{ secrets.MODRINTH_TOKEN }} \
+                -Pmodrinth.id="item-info-copier" \
+                -Pmodrinth.featured=true \
+                -Pmodrinth.changelog.file=CHANGELOG.md; then
+                echo "✅ Modrinth publish successful"
+                modrinth_success=true
+                modrinth_failures=0
+              else
+                echo "❌ Modrinth publish failed"
+                modrinth_failures=$((modrinth_failures + 1))
+                all_success=false
+                if [ $modrinth_failures -ge 2 ]; then
+                  delay=$((2 ** (modrinth_failures - 1) * 10))
+                  echo "⏳ Modrinth consecutive failures: $modrinth_failures, waiting ${delay}s..."
+                  sleep $delay
+                fi
+              fi
+            else
+              echo "✅ Modrinth already successful, skipping"
+            fi
+            
+            # CurseForge 发布
+            if [ "$curseforge_success" = false ]; then
+              echo "📤 Attempting CurseForge publish..."
+              if ./gradlew curseforge \
+                --stacktrace \
+                -Pcurseforge.token=${{ secrets.CURSEFORGE_TOKEN }} \
+                -Pcurseforge.id="1435524" \
+                -Pcurseforge.changelog.file=CHANGELOG.md; then
+                echo "✅ CurseForge publish successful"
+                curseforge_success=true
+                curseforge_failures=0
+              else
+                echo "❌ CurseForge publish failed"
+                curseforge_failures=$((curseforge_failures + 1))
+                all_success=false
+                if [ $curseforge_failures -ge 2 ]; then
+                  delay=$((2 ** (curseforge_failures - 1) * 10))
+                  echo "⏳ CurseForge consecutive failures: $curseforge_failures, waiting ${delay}s..."
+                  sleep $delay
+                fi
+              fi
+            else
+              echo "✅ CurseForge already successful, skipping"
+            fi
+            
+            # 检查是否所有平台都成功
+            if [ "$all_success" = true ]; then
+              echo "🎉 All platforms published successfully!"
+              break
+            fi
+            
+            cycle=$((cycle + 1))
+          done
+          
+          # 检查最终状态
+          if [ "$github_success" = false ] || [ "$modrinth_success" = false ] || [ "$curseforge_success" = false ]; then
+            echo "❌ Some platforms failed after $max_cycles cycles"
+            echo "GitHub: $github_success, Modrinth: $modrinth_success, CurseForge: $curseforge_success"
+            exit 1
+          fi
