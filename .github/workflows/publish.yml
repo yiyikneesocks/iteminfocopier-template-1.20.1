@@ -33,7 +33,8 @@ jobs:
           # GitHub
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-tag: ${{ github.ref_name }}
-          github-generate-changelog: true
+          github-generate-changelog: false
+          github-changelog-file: CHANGELOG.md  # 使用自定义文件
           github-draft: false
           github-prerelease: false
           github-commitish: main   # 发布基于 main 分支
@@ -42,10 +43,12 @@ jobs:
           modrinth-id: "item-info-copier"
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
-
+          modrinth-changelog-file: CHANGELOG.md  # 添加这个：从文件读取 changelog
+    
           # CurseForge
           curseforge-id: "1435524"
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-changelog-file: CHANGELOG.md  # 添加这个：从文件读取 changelog
 
           # 上传的文件
           files: |

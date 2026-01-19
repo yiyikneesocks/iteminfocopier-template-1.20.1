@@ -71,6 +71,7 @@ public final class HotkeyConfigScreen {
         return builder.build();
     }
 
+    @SuppressWarnings("deprecation")  // TooltipListEntry constructor is deprecated but still functional
     private static class HotkeyEntry extends TooltipListEntry<Object> {
         private final TextWidget hotkeyText;
         private final ButtonWidget recordButton;
