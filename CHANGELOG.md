@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## v1.0.4 - The Feedback & UI Update
+## v1.0.6 - The Feedback & UI Update
 
 **Note**: While marked as compatible with Minecraft 1.20.1 - 1.20.4, this version has only been fully tested on **1.20.1**.
 
@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## v1.0.4 - 反馈与UI更新
+## v1.0.6 - 反馈与UI更新
 
 **注意**：尽管已标记为与 Minecraft 1.20.1 - 1.20.4 兼容，但此版本仅在 **1.20.1** 上进行过全面测试。
 
