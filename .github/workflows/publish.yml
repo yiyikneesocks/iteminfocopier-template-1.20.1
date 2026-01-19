@@ -37,6 +37,9 @@ jobs:
 
       - name: Smart Multi-Platform Publish
         run: |
+          # 启用扩展通配符支持
+          shopt -s extglob
+          
           # 初始化平台状态
           github_success=false
           modrinth_success=false
